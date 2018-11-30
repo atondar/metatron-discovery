@@ -144,11 +144,12 @@
 
 <!-- 룰 편집 화면 -->
 <app-edit-dataflow-rule-2 *ngIf="step=='update-rules'"
-                        [dataflow]="dataflow"
-                        [selectedDataSet]="selectedDataSet"
-                        (close)="init();"
-                        (changeDataset)="onDatasetChange($event)"
-                        (closeEditRule)="closeEditRule()">
+                          [dfId]="dataflow.dfId"
+                          [dsListInDataflow]="dataflow['_embedded'].datasets"
+                          [selectedDataSet]="selectedDataSet"
+                          (close)="init();"
+                          (changeDataset)="onDatasetChange($event)"
+                          (closeEditRule)="closeEditRule()">
 </app-edit-dataflow-rule-2>
 <!-- //룰 편집 화면 -->
 

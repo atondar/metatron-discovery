@@ -82,7 +82,10 @@ export class EditDataflowRule2Component extends AbstractPopupComponent implement
   public isInitDataLoaded: boolean = false;
 
   @Input()
-  public dataflow: Dataflow;
+  public dfId: string;
+
+  @Input()
+  public dsListInDataflow : Dataset[];
 
   @Input()
   public selectedDataSet: Dataset;
@@ -145,7 +148,6 @@ export class EditDataflowRule2Component extends AbstractPopupComponent implement
   public commandList: any[];
   public editColumnList = [];                 // 수정 할 컬럼 리스트
   public selectedColumns: string[] = [];     // 그리드에서 선택된 컬럼 리스트
-  public selectedRows: any = [];             // 그리드에서 선택된 로우 리스트
 
   // tell if union is updating or just adding
   public isUpdate: boolean = false;
@@ -166,9 +168,11 @@ export class EditDataflowRule2Component extends AbstractPopupComponent implement
 
 
   get filteredWrangledDatasets() {
-    if (this.dataflow['_embedded'].datasets.length === 0) return [];
+    if (isNullOrUndefined(this.dsListInDataflow) || this.dsListInDataflow.length === 0) {
+      return [];
+    }
 
-    let list = this.dataflow['_embedded'].datasets;
+    let list = this.dsListInDataflow;
 
     list = list.filter((dataset) => {
       return dataset.dsType.toString() === 'WRANGLED';
@@ -176,6 +180,7 @@ export class EditDataflowRule2Component extends AbstractPopupComponent implement
       data.current = data.dsId === this.selectedDataSet.dsId;
       return data;
     });
+
     return list;
   }
 

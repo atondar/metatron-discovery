@@ -27,7 +27,7 @@
           <!-- popup -->
           <div class="ddp-wrap-popup2 ddp-type">
             <div class="ddp-ui-label ">
-              {{'msg.dp.ui.num.ds.flow' | translate : {value:dataflow['wrangledDsCount']} }}
+              {{'msg.dp.ui.num.ds.flow' | translate : {value: filteredWrangledDatasets.length } }}
             </div>
 
             <ul class="ddp-list-popup ddp-list-dataset">
@@ -291,7 +291,7 @@
                      [serverSyncIndex]="serverSyncIndex"
                      (joinComplete)="ruleJoinComplete($event);"
                      *ngIf="isRuleJoinModalShow"
-                     [dfId]="dataflow.dfId"
+                     [dfId]="dfId"
                      [rightDataset]="rightDataset"
                      [editRuleStr]="editJoinOrUnionRuleStr">
 </app-rule-join-popup>
@@ -300,7 +300,7 @@
 <!-- Union rule popup -->
 <app-rule-union-popup [masterDataset]="selectedDataSet"
                       [serverSyncIndex]="serverSyncIndex"
-                      [dfId]="dataflow.dfId"
+                      [dfId]="dfId"
                       [editRuleStr]="editJoinOrUnionRuleStr"
                       (unionComplete)="ruleUnionComplete($event);"
                       *ngIf="isRuleUnionModalShow">

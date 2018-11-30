@@ -139,15 +139,6 @@ export class DataflowDetailComponent extends AbstractPopupComponent implements O
   // delete selected dataflow
   public selectedDataflowId: string;
 
-  public dataflows: Dataflow[] = [];
-
-  // 룰 리스트 (룰 미리보기)
-  public ruleList: any[];
-
-  // 룰 리스트에서 필요한 변수
-  public commandList: any[];
-  public ruleVO: Rule = new Rule;
-
   // container for dataflow name/desc - for edit
   public dataflowName: string;
   public dataflowDesc: string;
@@ -212,8 +203,8 @@ export class DataflowDetailComponent extends AbstractPopupComponent implements O
       }
     });
 
-    // 초기 세팅
-    this.initViewPage();
+    // Set initial values for some variables
+    this._setInitialValues();
 
     // 초기화
     this.init();
@@ -673,7 +664,12 @@ export class DataflowDetailComponent extends AbstractPopupComponent implements O
    | Private Method
    |-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-  private initViewPage() {
+  /**
+   * Set initial values for some variables/
+   * @returns {string | any | ElementRef}
+   * @private
+   */
+  private _setInitialValues() {
 
     this.symbolInfo = {
       IMPORTED: {
@@ -757,34 +753,6 @@ export class DataflowDetailComponent extends AbstractPopupComponent implements O
       ], animation: false
     };
 
-    this.commandList = [
-      { command: 'create', alias: 'Cr' },
-      { command: 'header', alias: 'He' },
-      { command: 'keep', alias: 'Ke' },
-      { command: 'replace', alias: 'Rp' },
-      { command: 'rename', alias: 'Rm' },
-      { command: 'set', alias: 'Se' },
-      { command: 'settype', alias: 'St' },
-      { command: 'countpattern', alias: 'Co' },
-      { command: 'split', alias: 'Sp' },
-      { command: 'derive', alias: 'Dr' },
-      { command: 'delete', alias: 'De' },
-      { command: 'drop', alias: 'Dp' },
-      { command: 'pivot', alias: 'Pv' },
-      { command: 'unpivot', alias: 'Up' },
-      { command: 'join', alias: 'Jo' },
-      { command: 'extract', alias: 'Ex' },
-      { command: 'flatten', alias: 'Fl' },
-      { command: 'merge', alias: 'Me' },
-      { command: 'nest', alias: 'Ne' },
-      { command: 'unnest', alias: 'Un' },
-      { command: 'aggregate', alias: 'Ag' },
-      { command: 'sort', alias: 'So' },
-      { command: 'move', alias: 'Mv' },
-      { command: 'union', alias: 'Ui' }
-    ];
-
-
   }
 
   /**
@@ -840,7 +808,8 @@ export class DataflowDetailComponent extends AbstractPopupComponent implements O
 
       if (dataflow) {
         // this.dataflow = dataflow 로 대체 가능한지 확인
-        this.dataflow = $.extend(this.dataflow, dataflow);
+        // this.dataflow = $.extend(this.dataflow, dataflow);
+        this.dataflow = dataflow;
 
         // canvas height resize
         this.dataflowChartAreaResize();
@@ -1248,26 +1217,9 @@ export class DataflowDetailComponent extends AbstractPopupComponent implements O
    * @returns {{dsId: (string | any); dsName: (string | any); name: (string | any); dsType; importType: any; detailType: any; flowName: any; upstream: any; children: Array; value: any[]; symbol: any; originSymbol: any; label: any}}
    */
   private createNode(dataset: Dataset, depth: number, position: number, rootNode?: any) {
-    let importType: ImportType = null;
-    let detailType = null;
-    let flowName = null;
-
-    // if (DsType.IMPORTED === dataset.dsType) {
-    //   importType = dataset.importType;
-    //   detailType = isUndefined(dataset.custom) ? 'DEFAULT' : JSON.parse(dataset.custom);
-    //   if (ImportType.DB === importType || ImportType.HIVE === importType) {
-    //     detailType = detailType.connType || 'DEFAULT';
-    //   } else if (ImportType.FILE === importType) {
-    //     detailType = detailType.fileType || 'DEFAULT';
-    //   }
-    // } else {
-    //   detailType = _.eq(dataset.creatorDfId, this.dataflow.dfId) ? 'CURR' : 'DIFF';
-    //   flowName = dataset.creatorDfId;
-    // }
-
-    flowName = dataset.creatorDfId;
-    importType = dataset.importType;
-    detailType = 'DEFAULT';
+    let importType: ImportType = dataset.importType;
+    let detailType: string = 'DEFAULT';
+    let flowName: string = dataset.creatorDfId;
 
     const nodeSymbol = DsType.IMPORTED === dataset.dsType ? this.symbolInfo[dataset.dsType][importType][detailType] : this.symbolInfo[dataset.dsType][detailType];
 
@@ -1286,6 +1238,7 @@ export class DataflowDetailComponent extends AbstractPopupComponent implements O
       originSymbol: _.cloneDeep(nodeSymbol),
       label: this.label
     };
+
     if (rootNode) {
       node['rootDataset'] = dataset['rootDataset'];
       node['rootValue'] = rootNode['value'];
